@@ -1,0 +1,73 @@
+# ══════════════════════════════════════════════════════════════════
+#  Karyarthi — Spring Boot Configuration
+#  All secrets come from environment variables.
+#  For local dev set them in your shell or a local .env file.
+# ══════════════════════════════════════════════════════════════════
+
+spring:
+
+  # ── MongoDB Atlas ─────────────────────────────────────────────
+  data:
+    mongodb:
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27017/karyarthi}
+      #
+      # Production Atlas URI format:
+      # mongodb+srv://<user>:<password>@cluster0.xxxxx.mongodb.net/karyarthi
+      #   ?retryWrites=true&w=majority&appName=karyarthi
+      #
+      auto-index-creation: true   # creates @Indexed fields automatically
+
+  # ── Email (optional — degrades to console log if unconfigured) ─
+  mail:
+    host:     ${SMTP_HOST:smtp.gmail.com}
+    port:     ${SMTP_PORT:587}
+    username: ${SMTP_USER:}
+    password: ${SMTP_PASSWORD:}
+    properties:
+      mail.smtp.auth:              true
+      mail.smtp.starttls.enable:   true
+      mail.smtp.connectiontimeout: 4000
+      mail.smtp.timeout:           4000
+    test-connection: false
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.mail.MailSenderValidatorAutoConfiguration
+
+  # ── File uploads ──────────────────────────────────────────────
+  servlet:
+    multipart:
+      max-file-size:    10MB
+      max-request-size: 11MB
+
+# ── Server ────────────────────────────────────────────────────────
+server:
+  port: ${PORT:8081}
+  error:
+    include-message: always
+
+# ── App config ────────────────────────────────────────────────────
+app:
+  jwt:
+    secret:                   ${JWT_SECRET:karyarthi-local-dev-secret-min-32-chars}
+    expiration-in-ms:         3600000      # 1 hour
+    refresh-expiration-in-ms: 604800000    # 7 days
+
+  razorpay:
+    key-id:     ${RAZORPAY_KEY_ID:rzp_test_T0aSXwYE4863Wx}
+    key-secret: ${RAZORPAY_KEY_SECRET:Wz7NrFAKijnUoIWa1GCdl9mY}
+
+  ai:
+    api-key: ${NVIDIA_API_KEY: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}
+    model: ${AI_MODEL:openai/gpt-oss-20b}
+    base-url: https://integrate.api.nvidia.com/v1/chat/completions
+  upload:
+    dir: ${UPLOAD_DIR:uploads}
+
+  # Comma-separated allowed CORS origins
+  allowed-origins: ${ALLOWED_ORIGINS:http://localhost:5173,http://localhost:8081}
+  frontend-url:    ${FRONTEND_URL:http://localhost:5173}
+
+# ── Payments ──────────────────────────────────────────────────────
+payments:
+  currency:     INR
+  amount-paise: 900
