@@ -21,7 +21,7 @@ public class AiOptimizationService {
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper mapper = new ObjectMapper();
 
-    @Value("${NVIDIA_API_KEY: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}")
+    @Value("${NVIDIA_API_KEY:}")
     private String apiKey;
 
     @Value("${AI_MODEL:openai/gpt-oss-20b}")
